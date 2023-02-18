@@ -30,20 +30,21 @@ int main()
     FILE *fp, *fp2;//Abrir arquivo
     clock_t t;//Marca o tempo em milissegundos
     char info[TAM], arq[30], arq2[30];//Armazena Nome e RG
+    char pasta[50] = "PastaDeLista/NomeRG/";
     char lista;//Define lista Sequencial ou Encadeada
     int op;//Op��es de Menu
     int C = 0, M = 0, caractere, quant_linhas = 0;
 
-    //printf("%d\n\n", 1/2);
-    /*
     printf("Informe o nome do arquivo a ser lido: \n");
     gets(arq);
-    strcpy(arq2, arq);
-    */
+    //strcpy(arq2, arq);
+    strcat(pasta, arq);
+    fp = fopen(pasta, "r");
+    fp2 = fopen(pasta, "r");
 
-    fp = fopen("PastaDeLista/NomeRG/NomeRG10K.txt", "r");
-    fp2 = fopen("PastaDeLista/NomeRG/NomeRG10K.txt", "r");
-    if(NULL == fp)
+    //fp = fopen("PastaDeLista/NomeRG/NomeRG10K.txt", "r");
+    //fp2 = fopen("PastaDeLista/NomeRG/NomeRG10K.txt", "r");
+    if(fp == NULL && fp2 == NULL)
     {
         printf("O arquivo nao pode ser aberto =(.\n");
         system("Pause");
@@ -66,7 +67,6 @@ int main()
 
         t = clock();
         while(fgets(info, 30, fp) != NULL){
-            //careca = malloc(sizeof(Tcliente));
             careca = (Tcliente*) malloc(sizeof(Tcliente));
             nome = (char*) strtok(info, ",");
             strcpy(careca->nome, nome);
