@@ -35,12 +35,14 @@ int main()
     int C = 0, M = 0, caractere, quant_linhas = 0;
 
     //printf("%d\n\n", 1/2);
+    /*
     printf("Informe o nome do arquivo a ser lido: \n");
     gets(arq);
     strcpy(arq2, arq);
+    */
 
-    fp = fopen(arq, "r");//abrir o arquivo
-    fp2 = fopen(arq2, "r");
+    fp = fopen("PastaDeLista/NomeRG/NomeRG10K.txt", "r");
+    fp2 = fopen("PastaDeLista/NomeRG/NomeRG10K.txt", "r");
     if(NULL == fp)
     {
         printf("O arquivo nao pode ser aberto =(.\n");
