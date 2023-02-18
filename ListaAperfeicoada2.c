@@ -11,19 +11,19 @@ typedef struct tipo_cliente
     struct tipo_cliente *proximo;
 }Tcliente;
 
-void inserirNovoCliente(Tcliente **cabeca, int n, int *C, int *M);
-void inserirNovoClienteSequencial(Tcliente **usuario, int n, int tam, int *C, int *M);
-void retirarCliente(Tcliente **cabeca, int n, int *C, int *M);
-void retirarClienteSequencial(Tcliente **usuario, int n, int tam, int *C, int *M);
-void listarEncadeado(Tcliente *cabeca);
-void imprimeEspecifico(Tcliente *cabeca, int *C, int *M);
-void buscarCliente(Tcliente *usuario, int op, int inic, int tam, int RG, int *C, int *M);
-void ordenarLista(Tcliente **usuario, int n, int tam, int *C, int *M);
-void ordenarListaQuickSort(Tcliente **usuario, int inicio, int fim, int *C, int *M);
-void ordenarListaMergeSort(Tcliente **usuario, int inicio, int fim, int *C, int *M);
-void merge(Tcliente *usuario, int inicio, int meio, int fim, int *C, int *M);
-void lerListaArquivo(FILE *fp, int n, Tcliente *cabeca);
-void lerListaArquivoSequencial(FILE *fp, int n, int tam, Tcliente *usuario);
+void inserirNovoCliente(Tcliente **cabeca, int n, int *C, int *M);//Insere um novo cliente em uma lista encadeada.
+void inserirNovoClienteSequencial(Tcliente **usuario, int n, int tam, int *C, int *M);//Insere um novo cliente em uma lista sequencial.
+void retirarCliente(Tcliente **cabeca, int n, int *C, int *M);//Retira um cliente de uma lista encadeada.
+void retirarClienteSequencial(Tcliente **usuario, int n, int tam, int *C, int *M);//Retira um cliente de uma lista sequencial.
+void listarEncadeado(Tcliente *cabeca);//imprime a lista encadeada
+void imprimeEspecifico(Tcliente *cabeca, int *C, int *M);// Encontra um cliente em especifico atravÃ©s do RG em uma lista enccadeada
+void buscarCliente(Tcliente *usuario, int op, int inic, int tam, int RG, int *C, int *M);;// Encontra um cliente em especifico atravÃ©s do RG em uma lista sequencial
+void ordenarLista(Tcliente **usuario, int n, int tam, int *C, int *M);// Ordena uma lista usando diferentes mÃ©todos
+void ordenarListaQuickSort(Tcliente **usuario, int inicio, int fim, int *C, int *M);//Ordena com QuickSort
+void ordenarListaMergeSort(Tcliente **usuario, int inicio, int fim, int *C, int *M);// Ordena com MergeSort
+void merge(Tcliente *usuario, int inicio, int meio, int fim, int *C, int *M);// Ordena com Merge
+void lerListaArquivo(FILE *fp, int n, Tcliente *cabeca);// LÃª a lista em arquivo encadeado
+void lerListaArquivoSequencial(FILE *fp, int n, int tam, Tcliente *usuario);// LÃª a lista em arquivo sequencial
 
 int main()
 {
@@ -31,7 +31,7 @@ int main()
     clock_t t;//Marca o tempo em milissegundos
     char info[TAM], arq[30], arq2[30];//Armazena Nome e RG
     char lista;//Define lista Sequencial ou Encadeada
-    int op;//Opções de Menu
+    int op;//Opï¿½ï¿½es de Menu
     int C = 0, M = 0, caractere, quant_linhas = 0;
 
     //printf("%d\n\n", 1/2);
@@ -56,7 +56,7 @@ int main()
     }while(lista != 'E' && lista != 'S');
 
     if(lista == 'E'){
-        Tcliente *careca = NULL; //Ponteiro para a cabeça da lista
+        Tcliente *careca = NULL; //Ponteiro para a cabeï¿½a da lista
         Tcliente *noAtual, *inicio = NULL, *anterior;
         FILE *file;
 
@@ -90,7 +90,7 @@ int main()
             printf("\n11 -> ler lista de um arquivo;\n12 -> sair do sistema.\n");
             scanf("%d", &op);
             switch(op){
-                case 1: t = clock();//Inserir cliente no início da lista
+                case 1: t = clock();//Inserir cliente no inï¿½cio da lista
                         inserirNovoCliente(&inicio, 1, &C, &M);
                         t = clock() - t;
                         printf("C(n) = %d\nM(n) = %d\n", C, M);
@@ -183,7 +183,7 @@ int main()
 
         usuario = (Tcliente*) malloc(sizeof(Tcliente)*quant_linhas);
         while((fgets(info, 30, fp))!= NULL){
-        //O pedaço recolhe as informaçoes do arquivo dividindo o nome e o RG
+        //O pedaï¿½o recolhe as informaï¿½oes do arquivo dividindo o nome e o RG
             pedaco = (char*) strtok(info, ",");
             strcpy(usuario[tam].nome, pedaco);
             pedaco = (char*) strtok (NULL, ",");
@@ -325,7 +325,7 @@ void inserirNovoCliente(Tcliente **cabeca, int n, int *C, int *M)
     scanf("%s", nome);
     printf("Digite seu RG: \n");
     scanf("%d", &RG);
-    //Criação de Novo Nó
+    //Criaï¿½ï¿½o de Novo Nï¿½
     novoNo = (Tcliente*) malloc(sizeof(Tcliente));
     strcpy(novoNo->nome, nome);
     novoNo->RG = RG;
@@ -534,7 +534,7 @@ void listarEncadeado (Tcliente *cabeca)
     int i = 0;
     while (cabeca != NULL){
         printf("\nCliente: %s, RG: %d, Posicao: %d\n", cabeca->nome, cabeca->RG, i);
-        cabeca = cabeca->proximo; //faz cabeça apontar para o proximo nó
+        cabeca = cabeca->proximo; //faz cabeï¿½a apontar para o proximo nï¿½
         i++;
     }
 }
