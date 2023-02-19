@@ -49,8 +49,7 @@ int main()
         exit(1);
     }
 
-    //printf("Linhas arq = %d", quant_linhas);
-
+    
     do{
         printf("\nEscolha uma lista para ser formada:\nE para Lista Encadeada\nS para Sequencial\n");
         scanf("%c", &lista);
@@ -166,7 +165,6 @@ int main()
         }
         return 0;
     }
-    //printf("\n%s\n%s\n%s\n%s\n", careca->nome, careca->proximo->nome, careca->proximo->proximo->nome, careca->proximo->proximo->proximo->nome);
     else{
         FILE *fileS;
         Tcliente *usuario;
