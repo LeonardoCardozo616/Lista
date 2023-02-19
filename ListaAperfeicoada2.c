@@ -12,6 +12,7 @@ typedef struct tipo_cliente
 }Tcliente;
 
 void inserirNovoCliente(Tcliente **cabeca, int n, int *C, int *M);//Insere um novo cliente em uma lista encadeada.
+Tcliente* criaçãoDeNo();
 void inserirClienteInicio(Tcliente **cabeca, int *C, int *M);
 void inserirNovoClienteSequencial(Tcliente **usuario, int n, int tam, int *C, int *M);//Insere um novo cliente em uma lista sequencial.
 void retirarCliente(Tcliente **cabeca, int n, int *C, int *M);//Retira um cliente de uma lista encadeada.
@@ -92,7 +93,7 @@ int main()
             switch(op){
                 case 1: t = clock();//Inserir cliente no in�cio da lista
                         //inserirNovoCliente(&inicio, 1, &C, &M);
-                        inserirClienteInicio(&careca, &inicio, &C, &M);
+                        inserirClienteInicio(&inicio, &C, &M);
                         t = clock() - t;
                         printf("C(n) = %d\nM(n) = %d\n", C, M);
                         printf("Tempo de execucao: %lfms\n", ((double)t)/((CLOCKS_PER_SEC/1000)));
@@ -374,7 +375,7 @@ void inserirNovoCliente(Tcliente **cabeca, int n, int *C, int *M)
     }
 }
 
-void inserirClienteInicio(Tcliente **inicio, int *C, int *M)
+Tcliente* criaçãoDeNo()
 {
     Tcliente *novoNo;
     char nome[30];
@@ -388,6 +389,13 @@ void inserirClienteInicio(Tcliente **inicio, int *C, int *M)
     novoNo = (Tcliente*) malloc(sizeof(Tcliente));
     strcpy(novoNo->nome, nome);
     novoNo->RG = RG;
+
+    return novoNo;
+}
+
+void inserirClienteInicio(Tcliente **inicio, int *C, int *M)
+{
+    Tcliente *novoNo = criaçãoDeNo();
     *M = 0;
     *C = 2;
     novoNo->proximo = *inicio;
