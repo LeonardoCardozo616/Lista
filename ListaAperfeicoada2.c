@@ -29,7 +29,7 @@ int main()
 {
     FILE *fp, *fp2;//Abrir arquivo
     clock_t t;//Marca o tempo em milissegundos
-    char info[TAM], arq[30], arq2[30];//Armazena Nome e RG
+    char info[TAM], arq[30];//Armazena Nome e RG
     char pasta[50] = "PastaDeLista/NomeRG/";
     char lista;//Define lista Sequencial ou Encadeada
     int op;//Op��es de Menu
@@ -37,13 +37,11 @@ int main()
 
     printf("Informe o nome do arquivo a ser lido: \n");
     gets(arq);
-    //strcpy(arq2, arq);
+    
     strcat(pasta, arq);
     fp = fopen(pasta, "r");
     fp2 = fopen(pasta, "r");
 
-    //fp = fopen("PastaDeLista/NomeRG/NomeRG10K.txt", "r");
-    //fp2 = fopen("PastaDeLista/NomeRG/NomeRG10K.txt", "r");
     if(fp == NULL && fp2 == NULL)
     {
         printf("O arquivo nao pode ser aberto =(.\n");
