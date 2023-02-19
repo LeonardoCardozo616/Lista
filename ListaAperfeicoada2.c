@@ -14,6 +14,7 @@ typedef struct tipo_cliente
 void inserirNovoCliente(Tcliente **cabeca, int n, int *C, int *M);//Insere um novo cliente em uma lista encadeada.
 Tcliente* criaçãoDeNo();
 void inserirClienteInicio(Tcliente **cabeca, int *C, int *M);
+void inserirClienteFinal(Tcliente **final, int *C, int *M);
 void inserirNovoClienteSequencial(Tcliente **usuario, int n, int tam, int *C, int *M);//Insere um novo cliente em uma lista sequencial.
 void retirarCliente(Tcliente **cabeca, int n, int *C, int *M);//Retira um cliente de uma lista encadeada.
 void retirarClienteSequencial(Tcliente **usuario, int n, int tam, int *C, int *M);//Retira um cliente de uma lista sequencial.
@@ -84,6 +85,8 @@ int main()
         printf("Tempo de execucao: %lfms\n", ((double)t)/((CLOCKS_PER_SEC/1000)));
         fclose(fp);
 
+        printf("Nome careca: %s, RG careca: %d\n", careca->nome, careca->RG);
+
         do{
             printf("\n\nOpcoes: \n1 -> inserir novo cliente no inicio da lista;\n2 -> inserir um novo cliente no final da lista;");
             printf("\n3 -> inserir novo cliente em alguma posicao especifica;\n4 -> retirar o primeiro cliente da lista;\n5 -> retirar o ultimo cliente da lista;");
@@ -100,7 +103,8 @@ int main()
                         break;
 
                 case 2: t = clock();//Inserir cliente no Final da Lista
-                        inserirNovoCliente(&inicio, 2, &C, &M);
+                        //inserirNovoCliente(&inicio, 2, &C, &M);
+                        inserirClienteFinal(&careca, &C, &M);
                         t = clock() - t;
                         printf("C(n) = %d\nM(n) = %d\n", C, M);
                         printf("Tempo de execucao: %lfms\n", ((double)t)/((CLOCKS_PER_SEC/1000)));
@@ -389,6 +393,7 @@ Tcliente* criaçãoDeNo()
     novoNo = (Tcliente*) malloc(sizeof(Tcliente));
     strcpy(novoNo->nome, nome);
     novoNo->RG = RG;
+    novoNo->proximo = NULL;
 
     return novoNo;
 }
@@ -396,10 +401,19 @@ Tcliente* criaçãoDeNo()
 void inserirClienteInicio(Tcliente **inicio, int *C, int *M)
 {
     Tcliente *novoNo = criaçãoDeNo();
-    *M = 0;
-    *C = 2;
     novoNo->proximo = *inicio;
     (*inicio) = novoNo;
+    *M = 1;
+    *C = 2;
+}
+
+void inserirClienteFinal(Tcliente **final, int *C, int *M)
+{
+    Tcliente *novoNo = criaçãoDeNo();
+    (*final)->proximo = novoNo;
+    *final = novoNo;
+    *M = 1;
+    *C = 2;
 }
 
 void inserirNovoClienteSequencial(Tcliente **usuario, int n, int tam, int* C, int *M)
