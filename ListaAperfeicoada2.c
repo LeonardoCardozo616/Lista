@@ -14,9 +14,10 @@ typedef struct tipo_cliente
 void listaEncadeada(Tcliente **cabeca, Tcliente **inicio ,FILE* fp);
 Tcliente* listaSequencial(FILE* fp, int linhas, int* tam);
 Tcliente* criaçãoDeNo();
-void inserirClienteInicio(Tcliente **cabeca, int *C, int *M);
-void inserirClienteFinal(Tcliente **final, int *C, int *M);
-void inserirCliente(Tcliente **cabeca, int *C, int *M);
+void inserirClienteInicioE(Tcliente **cabeca, int *C, int *M);
+void inserirClienteFinalE(Tcliente **final, int *C, int *M);
+void inserirClienteE(Tcliente **cabeca, int *C, int *M);
+void inserirClienteInicioS(Tcliente **usuario, int tam, int* C, int *M);
 void inserirNovoClienteSequencial(Tcliente **usuario, int n, int tam, int *C, int *M);//Insere um novo cliente em uma lista sequencial.
 void retirarCliente(Tcliente **cabeca, int n, int *C, int *M);//Retira um cliente de uma lista encadeada.
 void retirarClienteSequencial(Tcliente **usuario, int n, int tam, int *C, int *M);//Retira um cliente de uma lista sequencial.
@@ -80,21 +81,21 @@ int main()
             scanf("%d", &op);
             switch(op){
                 case 1: t = clock();//Inserir cliente no in�cio da lista
-                        inserirClienteInicio(&inicio, &C, &M);
+                        inserirClienteInicioE(&inicio, &C, &M);
                         t = clock() - t;
                         printf("C(n) = %d\nM(n) = %d\n", C, M);
                         printf("Tempo de execucao: %lfms\n", ((double)t)/((CLOCKS_PER_SEC/1000)));
                         break;
 
                 case 2: t = clock();//Inserir cliente no Final da Lista
-                        inserirClienteFinal(&careca, &C, &M);
+                        inserirClienteFinalE(&careca, &C, &M);
                         t = clock() - t;
                         printf("C(n) = %d\nM(n) = %d\n", C, M);
                         printf("Tempo de execucao: %lfms\n", ((double)t)/((CLOCKS_PER_SEC/1000)));
                         break;
 
                 case 3: t = clock();//Inserir Clientes em Outras Partes da Lista
-                        inserirCliente(&inicio, &C, &M);
+                        inserirClienteE(&inicio, &C, &M);
                         t = clock() - t;
                         printf("C(n) = %d\nM(n) = %d\n", C, M);
                         printf("Tempo de execucao: %lfms\n", ((double)t)/((CLOCKS_PER_SEC/1000)));
@@ -158,9 +159,7 @@ int main()
     else{
         FILE *fileS;
         Tcliente *usuario;
-        int tam = 0, caractere, quant_linhas = 0;
-        int RGS;
-        int op8, op7;
+        int tam = 0, caractere, quant_linhas = 0, RGS, op8, op7;
         t = clock();
 
         while((caractere = fgetc(fp)) != EOF){
@@ -168,8 +167,8 @@ int main()
                 quant_linhas++;
         }
         fclose(fp);
+
         fp = fopen(pasta, "r");
-        
         usuario = listaSequencial(fp, quant_linhas, &tam);
         t = clock() - t;
         printf("Tempo de execucao: %lfms\n", ((double)t)/((CLOCKS_PER_SEC/1000)));
@@ -184,7 +183,8 @@ int main()
                 case 1: t = clock();
                         tam++;
                         usuario = (Tcliente*) realloc(usuario, sizeof(Tcliente)*tam);
-                        inserirNovoClienteSequencial(&usuario, 1, tam, &C, &M);
+                        //inserirNovoClienteSequencial(&usuario, 1, tam, &C, &M);
+                        inserirClienteInicioS(&usuario, tam, &C, &M);
                         t = clock() - t;
                         printf("C(n) = %d\nM(n) = %d\n", C, M);
                         printf("Tempo de execucao: %lfms\n", ((double)t)/((CLOCKS_PER_SEC/1000)));
@@ -356,7 +356,7 @@ Tcliente* criaçãoDeNo()
     return novoNo;
 }
 
-void inserirClienteInicio(Tcliente **inicio, int *C, int *M)
+void inserirClienteInicioE(Tcliente **inicio, int *C, int *M)
 {
     Tcliente *novoNo = criaçãoDeNo();
     novoNo->proximo = *inicio;
@@ -365,7 +365,7 @@ void inserirClienteInicio(Tcliente **inicio, int *C, int *M)
     *C = 2;
 }
 
-void inserirClienteFinal(Tcliente **final, int *C, int *M)
+void inserirClienteFinalE(Tcliente **final, int *C, int *M)
 {
     Tcliente *novoNo = criaçãoDeNo();
     (*final)->proximo = novoNo;
@@ -374,7 +374,7 @@ void inserirClienteFinal(Tcliente **final, int *C, int *M)
     *C = 2;
 }
 
-void inserirCliente(Tcliente **cabeca, int *C, int *M)
+void inserirClienteE(Tcliente **cabeca, int *C, int *M)
 {
     Tcliente *novoNo;
     Tcliente *posA = *cabeca,
@@ -388,7 +388,7 @@ void inserirCliente(Tcliente **cabeca, int *C, int *M)
     }while(pos < 0);
 
     if(pos == 0)
-        inserirClienteInicio(cabeca, C, M);
+        inserirClienteInicioE(cabeca, C, M);
     else{
         novoNo = criaçãoDeNo();
         for(int i = 1; i < pos; i++){
@@ -458,6 +458,20 @@ void inserirNovoClienteSequencial(Tcliente **usuario, int n, int tam, int* C, in
         strcpy((*usuario)[ps].nome, nome);
         (*usuario)[ps].RG = RG;
     }
+}
+
+void inserirClienteInicioS(Tcliente **usuario, int tam, int* C, int *M)
+{
+    Tcliente *pessoa = criaçãoDeNo();
+
+    for(int i = tam-1; i > 0; i--){
+        strcpy((*usuario)[i].nome, (*usuario)[i-1].nome);
+        (*usuario)[i].RG = (*usuario)[i-1].RG;
+        *M = *M + 1;
+        *C = *C + 1;
+    }
+    strcpy((*usuario)[0].nome, pessoa->nome);
+    (*usuario)[0].RG = pessoa->RG;
 }
 
 void retirarCliente(Tcliente** cabeca, int n, int *C, int *M)
