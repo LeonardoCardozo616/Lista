@@ -11,7 +11,8 @@ typedef struct tipo_cliente
     struct tipo_cliente *proximo;
 }Tcliente;
 
-void inserirNovoCliente(Tcliente **cabeca, int n, int *C, int *M);//Insere um novo cliente em uma lista encadeada.
+void listaEncadeada(Tcliente **cabeca, Tcliente **inicio ,FILE* fp);
+Tcliente* listaSequencial(FILE* fp, int linhas, int* tam);
 Tcliente* criaçãoDeNo();
 void inserirClienteInicio(Tcliente **cabeca, int *C, int *M);
 void inserirClienteFinal(Tcliente **final, int *C, int *M);
@@ -31,22 +32,21 @@ void lerListaArquivoSequencial(FILE *fp, int n, int tam, Tcliente *usuario);// L
 
 int main()
 {
-    FILE *fp, *fp2;//Abrir arquivo
+    FILE *fp;//Abrir arquivo
     clock_t t;//Marca o tempo em milissegundos
-    char info[TAM], arq[30];//Armazena Nome e RG
+    char arq[30];//Armazena Nome e RG
     char pasta[50] = "PastaDeLista/NomeRG/";
     char lista;//Define lista Sequencial ou Encadeada
     int op;//Op��es de Menu
-    int C = 0, M = 0, caractere, quant_linhas = 0;
+    int C = 0, M = 0;
 
     printf("Informe o nome do arquivo a ser lido: \n");
     gets(arq);
     
     strcat(pasta, arq);
     fp = fopen(pasta, "r");
-    fp2 = fopen(pasta, "r");
 
-    if(fp == NULL && fp2 == NULL)
+    if(fp == NULL)
     {
         printf("O arquivo nao pode ser aberto =(.\n");
         system("Pause");
@@ -67,26 +67,10 @@ int main()
         char *nome, *RG;//Armazena Nome RG
 
         t = clock();
-        while(fgets(info, 30, fp) != NULL){
-            careca = (Tcliente*) malloc(sizeof(Tcliente));
-            nome = (char*) strtok(info, ",");
-            strcpy(careca->nome, nome);
-            RG = (char*) strtok (NULL, ",");
-            careca->RG = atoi(RG);
-            careca->proximo = NULL;
-            if(inicio == NULL){
-                inicio = careca;
-            }
-            else{
-                anterior->proximo = careca;
-            }
-            anterior = careca;
-        }//Cria uma Lista Encadeada
+        listaEncadeada(&careca, &inicio, fp);
         t = clock() - t;
         printf("Tempo de execucao: %lfms\n", ((double)t)/((CLOCKS_PER_SEC/1000)));
         fclose(fp);
-
-        printf("Nome careca: %s, RG careca: %d\n", careca->nome, careca->RG);
 
         do{
             printf("\n\nOpcoes: \n1 -> inserir novo cliente no inicio da lista;\n2 -> inserir um novo cliente no final da lista;");
@@ -174,30 +158,22 @@ int main()
     else{
         FILE *fileS;
         Tcliente *usuario;
-        char info[2*TAM], *pedaco, nome[TAM];
-        int tam = 0;
-        int RGS, Encontrou = 0;
+        int tam = 0, caractere, quant_linhas = 0;
+        int RGS;
         int op8, op7;
         t = clock();
 
-        while((caractere = fgetc(fp2)) != EOF){
+        while((caractere = fgetc(fp)) != EOF){
             if(caractere == '\n')
                 quant_linhas++;
         }
-
-        usuario = (Tcliente*) malloc(sizeof(Tcliente)*quant_linhas);
-        while((fgets(info, 30, fp))!= NULL){
-        //O peda�o recolhe as informa�oes do arquivo dividindo o nome e o RG
-            pedaco = (char*) strtok(info, ",");
-            strcpy(usuario[tam].nome, pedaco);
-            pedaco = (char*) strtok (NULL, ",");
-            usuario[tam].RG = atoi(pedaco);
-            usuario[tam].proximo = NULL;
-            tam++;
-        }
+        fclose(fp);
+        fp = fopen(pasta, "r");
+        
+        usuario = listaSequencial(fp, quant_linhas, &tam);
         t = clock() - t;
         printf("Tempo de execucao: %lfms\n", ((double)t)/((CLOCKS_PER_SEC/1000)));
-        C = 0; M = 0;
+        fclose(fp);
         do{
             printf("\n\nOpcoes: \n1 -> inserir novo cliente no inicio da lista;\n2 -> inserir um novo cliente no final da lista;");
             printf("\n3 -> inserir novo cliente em alguma posicao especifica;\n4 -> retirar o primeiro cliente da lista;\n5 -> retirar o ultimo cliente da lista;");
@@ -319,63 +295,46 @@ int main()
 
 }
 
-void inserirNovoCliente(Tcliente **cabeca, int n, int *C, int *M)
+void listaEncadeada(Tcliente **cabeca, Tcliente **inicio ,FILE* fp)
 {
-    Tcliente *novoNo;
-    char nome[30];
-    int RG;
+    char info[2*TAM];
+    char *nome, *RG;//Armazena Nome RG
+    Tcliente *anterior;
 
-    printf("Digite o nome do Cliente: \n");
-    scanf("%s", nome);
-    printf("Digite seu RG: \n");
-    scanf("%d", &RG);
-    //Cria��o de Novo N�
-    novoNo = (Tcliente*) malloc(sizeof(Tcliente));
-    strcpy(novoNo->nome, nome);
-    novoNo->RG = RG;
-    novoNo->proximo = NULL;
+        while(fgets(info, 30, fp) != NULL){
+            *cabeca = (Tcliente*) malloc(sizeof(Tcliente));
+            nome = (char*) strtok(info, ",");
+            strcpy((*cabeca)->nome, nome);
+            RG = (char*) strtok (NULL, ",");
+            (*cabeca)->RG = atoi(RG);
+            (*cabeca)->proximo = NULL;
+            if(*inicio == NULL){
+                *inicio = *cabeca;
+            }
+            else{
+                anterior->proximo = *cabeca;
+            }
+            anterior = *cabeca;
+        }//Cria uma Lista Encadeada
+}
 
-    if(n == 1){//Insere primeiro elemento
-        *C = 1;
-        Tcliente *CabecaVelha;
+Tcliente* listaSequencial(FILE* fp, int linhas, int* tam)
+{
+    Tcliente *usuario;
+    char info[2*TAM], *pedaco, nome[TAM];
 
-        CabecaVelha = (*cabeca);
-        (*cabeca) = novoNo;
-        novoNo->proximo = CabecaVelha;
-        *M = 3;
+    usuario = (Tcliente*) malloc(sizeof(Tcliente)*linhas);
+    while((fgets(info, 50, fp))!= NULL){
+        //O pedaço recolhe as informações do arquivo dividindo o nome e o RG
+        pedaco = (char*) strtok(info, ",");
+        strcpy(usuario[(*tam)].nome, pedaco);
+        pedaco = (char*) strtok (NULL, ",");
+        usuario[(*tam)].RG = atoi(pedaco);
+        usuario[(*tam)].proximo = NULL;
+        (*tam)++;
     }
-    else if(n == 2){//Insere ultimo elemento
-        Tcliente *ultimo = *cabeca;
-        *C = 2;
-        *M = 1;
-        while(ultimo->proximo != NULL){
-            ultimo = ultimo->proximo;
-            *M = *M + 1;
-            *C = *C + 1;
-        }
-        ultimo->proximo = novoNo;
-        *M = *M + 1;
-    }
-    else{//Insere elmentos em outros lugares
-        int ps;
-        Tcliente *posicao1 = *cabeca;
-        Tcliente *posicao2 = (*cabeca)->proximo;
-        *C = 3;
-        *M = 1;
-        do{
-            printf("Escolha a posicao que deseja incluir:\n");
-            scanf("%d", &ps);//Baseado no Binario
-        }while(ps < 1);
 
-        for(int i = 1; i < ps; i++){
-            posicao1 = posicao1->proximo;
-            posicao2 = posicao2->proximo;
-            *M = *M + 2;
-        }
-        posicao1->proximo = novoNo;
-        novoNo->proximo = posicao2;
-        *M = *M + 2;
-    }
+    return usuario;
 }
 
 Tcliente* criaçãoDeNo()
